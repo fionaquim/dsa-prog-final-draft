@@ -12,11 +12,11 @@ namespace ZITA_FINALS
         {
             // i used char to manipulate my alphabet table more efficiently
             char[,] Table = new char[26, 26];
-            for (int i = 0; i < 26; i++)
+            for (int i = 0; i < 26; i++) // outer loop rows
             {
-                for (int j = 0; j < 26; j++)
+                for (int j = 0; j < 26; j++) // inner loop columns
                 {
-                    Table[i, j] = (char)('A' + (i + j) % 26);
+                    Table[i, j] = (char)('A' + (i + j) % 26); // calculates char to put in the cell
                 }
             }
 
@@ -24,7 +24,7 @@ namespace ZITA_FINALS
             {
                 Console.ForegroundColor = ConsoleColor.Magenta;
                 Console.WriteLine("S E L E C T  O N E");
-                Console.WriteLine("Do you want to (E)ncrypt or (D)ecrypt? (Q to quit)");
+                Console.WriteLine("\n[E] ENCRYPT \n[D] DECRYPT \n[Q] QUIT \n");
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 char choice = Char.ToUpper(Console.ReadKey().KeyChar);
                 Console.WriteLine();
@@ -32,11 +32,12 @@ namespace ZITA_FINALS
 
                 if (choice == 'Q')
                 {
-                    Console.WriteLine("Exiting...");
+                    Console.WriteLine("Exiting the program, thank you for using...");
                     break;
                 }
                 else if (choice != 'E' && choice != 'D')
                 {
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
                     Console.WriteLine("Invalid choice! Please select E, D, or Q to quit.");
                     continue;
                 }
@@ -48,10 +49,10 @@ namespace ZITA_FINALS
 
                 // Get the key either from file or manually
                 Console.WriteLine("Do you want to (R)ead the key from a file or (I)nput the key manually?");
-                char keyChoice = Char.ToUpper(Console.ReadKey().KeyChar);
+                char keyChoice = Char.ToUpper(Console.ReadKey().KeyChar); // converts message to uppercase
                 Console.WriteLine();
 
-                // Read the key from a file using StreamReader
+                // creates an empty string to hold e/d
                 string key = string.Empty;
 
                 if (keyChoice == 'R')
@@ -59,7 +60,7 @@ namespace ZITA_FINALS
                     string keyFilePath = "encryptkey.txt"; // Assuming the key file is in the same directory as the executable
                     try
                     {
-                        using (StreamReader sr = new StreamReader(keyFilePath))
+                        using (StreamReader sr = new StreamReader(keyFilePath)) // opens filepath
                         {
                             key = sr.ReadToEnd().ToUpper(); // Read all contents of the file and convert to uppercase
                         }
@@ -89,13 +90,15 @@ namespace ZITA_FINALS
                 }
 
                 // Prepare the key to match the length of the message
-                int keyLength = key.Length;
-                for (int i = keyLength; i < message.Length; i++)
+                int keyLength = key.Length; 
+                for (int i = keyLength; i < message.Length; i++) // it populates until it is less than the message loop
                 {
-                    key += key[i % keyLength]; // Extend the key to match the message length
+                    key += key[i % keyLength]; // Extends the key to match the message length
                 }
-
+                //takes the char from the original key and appends it, it repeats until key is long as the message
+                
                 // Display the alphabet table
+                Console.ForegroundColor = ConsoleColor.DarkCyan;
                 Console.WriteLine("\nAlphabet Table:");
                 for (int i = 0; i < 26; i++)
                 {
@@ -108,25 +111,26 @@ namespace ZITA_FINALS
                 Console.WriteLine();
 
                 // Encrypt or Decrypt the message
-                char[] result = new char[message.Length];
+                // 'A' serves as the baseline, A in ascii is 65
+                char[] result = new char[message.Length]; // creates an array to store the result
                 for (int i = 0; i < message.Length; i++)
                 {
-                    if (char.IsLetter(message[i]))
+                    if (char.IsLetter(message[i])) //checks if current char is letter
                     {
                         if (choice == 'E') // Encrypt the message
                         {
-                            int row = message[i] - 'A';
-                            int col = key[i] - 'A'; // Get the corresponding key character
+                            int row = message[i] - 'A'; // Calculates row index by converting char to its position in the table
+                            int col = key[i] - 'A'; // subtracts A from the key, then converts to the index
                             result[i] = Table[row, col];
                         }
                         else // Decrypt the message
                         {
-                            int col = key[i] - 'A';
-                            for (int row = 0; row < 26; row++)
+                            int col = key[i] - 'A'; // Subtracting 'A' from key[i] converts the key character to its index 
+                            for (int row = 0; row < 26; row++) // loops hanggang mahanap correct row
                             {
-                                if (Table[row, col] == message[i])
+                                if (Table[row, col] == message[i]) // checks if it matches the current char in the message
                                 {
-                                    result[i] = (char)('A' + row);
+                                    result[i] = (char)('A' + row); // converts
                                     break;
                                 }
                             }
@@ -157,9 +161,6 @@ namespace ZITA_FINALS
                     Console.ForegroundColor = ConsoleColor.DarkRed;
                     Console.WriteLine("An error occurred while writing to the output file: " + ex.Message);
                 }
-
-                Console.WriteLine("\nResult:");
-                Console.WriteLine(new string(result));
 
             }
         }
