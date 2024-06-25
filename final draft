@@ -10,7 +10,7 @@ namespace ZITA_FINALS
     {
         static void Main(string[] args)
         {
-            // i used char to manipulate my alphabet table more efficiently
+            
             char[,] Table = new char[26, 26];
             for (int i = 0; i < 26; i++) // outer loop rows
             {
@@ -23,6 +23,7 @@ namespace ZITA_FINALS
             while (true)
             {
                 Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.WriteLine("\n████████╗ █████╗ ██████╗ ██╗     ███████╗     ██████╗ ███████╗    ██╗     ███████╗████████╗████████╗███████╗██████╗ ███████╗\n╚══██╔══╝██╔══██╗██╔══██╗██║     ██╔════╝    ██╔═══██╗██╔════╝    ██║     ██╔════╝╚══██╔══╝╚══██╔══╝██╔════╝██╔══██╗██╔════╝\n   ██║   ███████║██████╔╝██║     █████╗      ██║   ██║█████╗      ██║     █████╗     ██║      ██║   █████╗  ██████╔╝███████╗\n   ██║   ██╔══██║██╔══██╗██║     ██╔══╝      ██║   ██║██╔══╝      ██║     ██╔══╝     ██║      ██║   ██╔══╝  ██╔══██╗╚════██║\n   ██║   ██║  ██║██████╔╝███████╗███████╗    ╚██████╔╝██║         ███████╗███████╗   ██║      ██║   ███████╗██║  ██║███████║\n   ╚═╝   ╚═╝  ╚═╝╚═════╝ ╚══════╝╚══════╝     ╚═════╝ ╚═╝         ╚══════╝╚══════╝   ╚═╝      ╚═╝   ╚══════╝╚═╝  ╚═╝╚══════╝\n                                                                                                                            \n");
                 Console.WriteLine("S E L E C T  O N E");
                 Console.WriteLine("\n[E] ENCRYPT \n[D] DECRYPT \n[Q] QUIT \n");
                 Console.ForegroundColor = ConsoleColor.Cyan;
@@ -41,41 +42,42 @@ namespace ZITA_FINALS
                     Console.WriteLine("Invalid choice! Please select E, D, or Q to quit.");
                     continue;
                 }
+                Console.WriteLine(choice == 'E' ? "YOU HAVE CHOSEN ENCRYPTION" : "YOU HAVE CHOSEN DECRYPTION");
 
-                // Get the message from the user
+
                 Console.ForegroundColor = ConsoleColor.DarkMagenta;
                 Console.WriteLine("Enter the message:");
                 string message = Console.ReadLine().ToUpper();
 
-                // Get the key either from file or manually
+                
                 Console.WriteLine("Do you want to (R)ead the key from a file or (I)nput the key manually?");
-                char keyChoice = Char.ToUpper(Console.ReadKey().KeyChar); // converts message to uppercase
+                char keyChoice = Char.ToUpper(Console.ReadKey().KeyChar);
                 Console.WriteLine();
 
-                // creates an empty string to hold e/d
+               
                 string key = string.Empty;
 
                 if (keyChoice == 'R')
                 {
-                    string keyFilePath = "encryptkey.txt"; // Assuming the key file is in the same directory as the executable
+                    string keyFilePath = "encryptkey.txt"; 
                     try
                     {
-                        using (StreamReader sr = new StreamReader(keyFilePath)) // opens filepath
+                        using (StreamReader sr = new StreamReader(keyFilePath)) 
                         {
-                            key = sr.ReadToEnd().ToUpper(); // Read all contents of the file and convert to uppercase
+                            key = sr.ReadToEnd().ToUpper(); 
                         }
                     }
                     catch (FileNotFoundException)
                     {
                         Console.ForegroundColor = ConsoleColor.DarkRed;
                         Console.WriteLine("Key file not found! Please ensure 'encryptkey.txt' is in the correct directory.");
-                        continue; // Skip the rest of the loop and ask for input again
+                        continue; 
                     }
                     catch (Exception ex)
                     {
                         Console.ForegroundColor = ConsoleColor.DarkRed;
                         Console.WriteLine("An error occurred while reading the key file: " + ex.Message);
-                        continue; // Skip the rest of the loop and ask for input again
+                        continue; 
                     }
                 }
                 else if (keyChoice == 'I')
@@ -95,9 +97,9 @@ namespace ZITA_FINALS
                 {
                     key += key[i % keyLength]; // Extends the key to match the message length
                 }
-                //takes the char from the original key and appends it, it repeats until key is long as the message
+                // takes the char from the original key and appends it, it repeats until key is long as the message
                 
-                // Display the alphabet table
+                
                 Console.ForegroundColor = ConsoleColor.DarkCyan;
                 Console.WriteLine("\nAlphabet Table:");
                 for (int i = 0; i < 26; i++)
@@ -110,27 +112,25 @@ namespace ZITA_FINALS
                 }
                 Console.WriteLine();
 
-                // Encrypt or Decrypt the message
-                // 'A' serves as the baseline, A in ascii is 65
                 char[] result = new char[message.Length]; // creates an array to store the result
                 for (int i = 0; i < message.Length; i++)
                 {
-                    if (char.IsLetter(message[i])) //checks if current char is letter
+                    if (char.IsLetter(message[i])) 
                     {
-                        if (choice == 'E') // Encrypt the message
+                        if (choice == 'E') 
                         {
                             int row = message[i] - 'A'; // Calculates row index by converting char to its position in the table
-                            int col = key[i] - 'A'; // subtracts A from the key, then converts to the index
+                            int col = key[i] - 'A'; // subtracts A from the key
                             result[i] = Table[row, col];
                         }
-                        else // Decrypt the message
+                        else 
                         {
                             int col = key[i] - 'A'; // Subtracting 'A' from key[i] converts the key character to its index 
                             for (int row = 0; row < 26; row++) // loops hanggang mahanap correct row
                             {
-                                if (Table[row, col] == message[i]) // checks if it matches the current char in the message
+                                if (Table[row, col] == message[i]) 
                                 {
-                                    result[i] = (char)('A' + row); // converts
+                                    result[i] = (char)('A' + row);
                                     break;
                                 }
                             }
@@ -138,22 +138,20 @@ namespace ZITA_FINALS
                     }
                     else
                     {
-                        result[i] = message[i]; // Non-letter characters remain unchanged
+                        result[i] = message[i]; 
                     }
                 }
 
-                // Display the result
                 string resultMessage = choice == 'E' ? "Encrypted message: " : "Decrypted message: ";
                 string resultText = new string(result);
                 Console.WriteLine(resultMessage);
                 Console.WriteLine(resultText);
 
-                // Append the result to output.txt
                 try
                 {
-                    using (StreamWriter sw = new StreamWriter("output.txt", true)) // Open the file in append mode
+                    using (StreamWriter sw = new StreamWriter("output.txt", true)) 
                     {
-                        sw.WriteLine(resultMessage + resultText); // Write the result to the file
+                        sw.WriteLine(resultMessage + resultText); 
                     }
                 }
                 catch (Exception ex)
