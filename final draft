@@ -83,7 +83,7 @@ namespace ZITA_FINALS
                 else if (keyChoice == 'I')
                 {
                     Console.WriteLine("Enter the key:");
-                    key = Console.ReadLine().ToUpper();
+                    key = Console.ReadLine().ToUpper().Replace(" ", "");
                 }
                 else
                 {
